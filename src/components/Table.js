@@ -3,26 +3,10 @@ import { useContext } from 'react';
 import AppContext from '../context/AppContext';
 
 function Table() {
-  const { apiData, filterByName, setFilterByName } = useContext(AppContext);
-
-  const inputTextChange = ({ target: { value } }) => {
-    setFilterByName(
-      value,
-    );
-  };
+  const { apiData } = useContext(AppContext);
 
   return (
     <div>
-      <header>
-        <input
-          value={ filterByName }
-          name="text-filter"
-          onChange={ inputTextChange }
-          placeholder="Filtrar por nome"
-          type="text"
-          data-testid="name-filter"
-        />
-      </header>
       <table>
         <thead>
           <tr>
