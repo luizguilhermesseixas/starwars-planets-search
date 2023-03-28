@@ -2,7 +2,9 @@ import Table from '../components/Table';
 
 function Main() {
   return (
-    <Table />
+    <div>
+      <Table />
+    </div>
   );
 }
 
