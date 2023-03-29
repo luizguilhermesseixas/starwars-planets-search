@@ -43,16 +43,24 @@ function AppProvider({ children }) {
     }
   }, [comparisonFilter, columnFilter, valueFilter]);
 
-  useEffect(() => {
-    if (valueFilter !== null) {
-      setApiData(
-        originalData
-          .filter((eachPlanet) => comparisonToString(eachPlanet)),
-      );
-    } else {
-      setApiData(originalData);
-    }
-  }, [columnFilter, comparisonFilter, valueFilter, originalData, comparisonToString]);
+  useEffect(
+    () => {
+      if (valueFilter !== null) {
+        setApiData(
+          apiData
+            .filter((eachPlanet) => comparisonToString(eachPlanet)),
+        );
+      } else {
+        setApiData(originalData);
+      }
+    },
+    [columnFilter,
+      comparisonFilter,
+      valueFilter,
+      originalData,
+      apiData,
+      comparisonToString],
+  );
 
   const values = {
     apiData,
