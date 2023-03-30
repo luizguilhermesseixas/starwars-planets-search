@@ -2,9 +2,6 @@ import { useContext } from 'react';
 import AppContext from '../context/AppContext';
 
 function Filters() {
-/*   const [localComparison, setLocalComparison] = useState('maior que');
-  const [localColumn, setLocalColumn] = useState('population');
-  const [localValue, setLocalValue] = useState(0); */
   const {
     filterByName,
     setFilterByName,
@@ -17,15 +14,17 @@ function Filters() {
     filterByNumericValue,
     setSelectedFilters,
     selectedFilters,
+    columnOptions,
+    setColumnOptions,
   } = useContext(AppContext);
 
-  const columnOptions = [
+  /*   const columnOptions = [
     'population',
     'orbital_period',
     'diameter',
     'rotation_period',
     'surface_water',
-  ];
+  ]; */
 
   const inputTextChange = ({ target: { value } }) => {
     setFilterByName(
@@ -51,6 +50,19 @@ function Filters() {
     );
   };
 
+  const removeColumnFilter = () => {
+    if (columnOptions.length > 0) {
+      const newColumnfilter = columnOptions
+        .filter((eachOption) => eachOption !== columnFilter);
+      setColumnOptions(newColumnfilter);
+      setColumnFilter(newColumnfilter[0]);
+    }
+    /*     if (columnOptions.length === 0) {
+      setComparisonFilter('');
+      setValueFilter(null);
+    } */
+  };
+
   const handleClick = () => {
     filterByNumericValue();
     setSelectedFilters([
@@ -61,6 +73,7 @@ function Filters() {
         valueFilter,
       },
     ]);
+    removeColumnFilter();
   };
 
   return (
@@ -103,6 +116,15 @@ function Filters() {
       >
         Aplicar filtro
       </button>
+      { selectedFilters.map((eachFilter, i) => (
+        <span key={ i }>
+          {eachFilter.columnFilter}
+          {' '}
+          {eachFilter.comparisonFilter}
+          {' '}
+          {valueFilter}
+        </span>
+      ))}
     </header>
   );
 }

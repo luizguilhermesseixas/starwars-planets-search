@@ -12,6 +12,13 @@ function AppProvider({ children }) {
   const [comparisonFilter, setComparisonFilter] = useState('maior que');
   const [valueFilter, setValueFilter] = useState(0);
   const [selectedFilters, setSelectedFilters] = useState([]);
+  const [columnOptions, setColumnOptions] = useState([
+    'population',
+    'orbital_period',
+    'diameter',
+    'rotation_period',
+    'surface_water',
+  ]);
 
   useEffect(() => {
     fetchApi().then((data) => {
@@ -49,6 +56,9 @@ function AppProvider({ children }) {
         apiData
           .filter((eachPlanet) => Number(eachPlanet[columnFilter] === parseValueFilter)),
       );
+    }
+    if (columnOptions.length === 0) {
+      setApiData(apiData);
     }
   };
 
@@ -97,6 +107,8 @@ function AppProvider({ children }) {
     filterByNumericValue,
     setSelectedFilters,
     selectedFilters,
+    columnOptions,
+    setColumnOptions,
   };
 
   return (
