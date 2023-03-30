@@ -1,20 +1,31 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import AppContext from '../context/AppContext';
 
 function Filters() {
-  const [localComparison, setLocalComparison] = useState('maior que');
+/*   const [localComparison, setLocalComparison] = useState('maior que');
   const [localColumn, setLocalColumn] = useState('population');
-  const [localValue, setLocalValue] = useState(0);
+  const [localValue, setLocalValue] = useState(0); */
   const {
     filterByName,
     setFilterByName,
-    /*     columnFilter, */
+    columnFilter,
     setColumnFilter,
-    /*     comparisonFilter, */
+    comparisonFilter,
     setComparisonFilter,
-    /*     valueFilter, */
+    valueFilter,
     setValueFilter,
+    filterByNumericValue,
+    setSelectedFilters,
+    selectedFilters,
   } = useContext(AppContext);
+
+  const columnOptions = [
+    'population',
+    'orbital_period',
+    'diameter',
+    'rotation_period',
+    'surface_water',
+  ];
 
   const inputTextChange = ({ target: { value } }) => {
     setFilterByName(
@@ -23,33 +34,33 @@ function Filters() {
   };
 
   const inputColumnChange = ({ target: { value } }) => {
-    setLocalColumn(
+    setColumnFilter(
       value,
     );
   };
 
   const inputComparisonChange = ({ target: { value } }) => {
-    setLocalComparison(
+    setComparisonFilter(
       value,
     );
   };
 
   const inputValueChange = ({ target: { value } }) => {
-    setLocalValue(
+    setValueFilter(
       value,
     );
   };
 
   const handleClick = () => {
-    if (localComparison === 'maior que') {
-      setComparisonFilter('>');
-    } if (localComparison === 'menor que') {
-      setComparisonFilter('<');
-    } if (localComparison === 'igual a') {
-      setComparisonFilter('===');
-    }
-    setColumnFilter(localColumn);
-    setValueFilter(localValue);
+    filterByNumericValue();
+    setSelectedFilters([
+      ...selectedFilters,
+      {
+        columnFilter,
+        comparisonFilter,
+        valueFilter,
+      },
+    ]);
   };
 
   return (
@@ -64,18 +75,16 @@ function Filters() {
       />
       <select
         data-testid="column-filter"
-        value={ localColumn }
+        value={ columnFilter }
         onChange={ inputColumnChange }
       >
-        <option>population</option>
-        <option>orbital_period</option>
-        <option>diameter</option>
-        <option>rotation_period</option>
-        <option>surface_water</option>
+        {
+          columnOptions.map((option) => <option key={ option }>{option}</option>)
+        }
       </select>
       <select
         data-testid="comparison-filter"
-        value={ localComparison }
+        value={ comparisonFilter }
         onChange={ inputComparisonChange }
       >
         <option>maior que</option>
@@ -85,7 +94,7 @@ function Filters() {
       <input
         type="number"
         data-testid="value-filter"
-        value={ localValue }
+        value={ valueFilter }
         onChange={ inputValueChange }
       />
       <button

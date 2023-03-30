@@ -6,17 +6,16 @@ import mockFetchApi, { mockData } from './mockData';
 import { act } from 'react-dom/test-utils';
 
 describe('Desenvolva testes para atingir 30% de cobertura total da aplicação', () => {
-  /* 
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        json: () => Promise.resolve(mockData)
-      })
-    ); */
+
 
   jest.mock('../services/fetchApi');
 
   beforeEach(() => {
-    mockFetchApi.mockClear();
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve(mockData)
+      })
+    );
   })
 
 
@@ -86,7 +85,7 @@ describe('Desenvolva testes para atingir 30% de cobertura total da aplicação',
     expect(valueFilterInput.value).toBe('40');
   });
   test('teste se ao aplicar o filtro population maior que 4500000000 o planeta Coruscant é exibido', async () => {
-    mockFetchApi.mockResolvedValueOnce(mockData);
+    mockFetchApi();
     await act(async () => {
       render(<App />)
     })

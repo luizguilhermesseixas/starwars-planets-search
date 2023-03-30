@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import fetchApi from '../services/fetchApi';
 
@@ -8,15 +8,15 @@ function AppProvider({ children }) {
   const [apiData, setApiData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [filterByName, setFilterByName] = useState('');
-  const [columnFilter, setColumnFilter] = useState('');
-  const [comparisonFilter, setComparisonFilter] = useState('');
-  const [valueFilter, setValueFilter] = useState(null);
+  const [columnFilter, setColumnFilter] = useState('population');
+  const [comparisonFilter, setComparisonFilter] = useState('maior que');
+  const [valueFilter, setValueFilter] = useState(0);
+  const [selectedFilters, setSelectedFilters] = useState([]);
 
   useEffect(() => {
     fetchApi().then((data) => {
       setApiData(data);
       setOriginalData(data);
-      console.log(data);
     });
   }, []);
 
@@ -30,21 +30,40 @@ function AppProvider({ children }) {
     }
   }, [filterByName, originalData]);
 
-  const comparisonToString = useCallback((param) => {
+  const filterByNumericValue = () => {
     const parseValueFilter = Number(valueFilter);
-    const parseColumnItem = Number(param[columnFilter]);
-    if (comparisonFilter === '>') {
-      return parseColumnItem > parseValueFilter;
+    if (comparisonFilter === 'maior que') {
+      setApiData(
+        apiData
+          .filter((eachPlanet) => Number(eachPlanet[columnFilter] > parseValueFilter)),
+      );
     }
-    if (comparisonFilter === '<') {
-      return parseColumnItem < parseValueFilter;
+    if (comparisonFilter === 'menor que') {
+      setApiData(
+        apiData
+          .filter((eachPlanet) => Number(eachPlanet[columnFilter] < parseValueFilter)),
+      );
     }
-    if (comparisonFilter === '===') {
-      return parseColumnItem === parseValueFilter;
+    if (comparisonFilter === 'igual a') {
+      setApiData(
+        apiData
+          .filter((eachPlanet) => Number(eachPlanet[columnFilter] === parseValueFilter)),
+      );
     }
-  }, [comparisonFilter, columnFilter, valueFilter]);
+  };
 
-  useEffect(
+  /*   const filterByNumericValue = () => {
+    if (valueFilter !== null) {
+      setApiData(
+        apiData
+          .filter((eachPlanet) => comparisonToString(eachPlanet)),
+      );
+    } else {
+      setApiData(originalData);
+    }
+  }; */
+
+  /*   useEffect(
     () => {
       if (valueFilter !== null) {
         setApiData(
@@ -63,7 +82,7 @@ function AppProvider({ children }) {
       apiData,
       comparisonToString,
     ],
-  );
+  ); */
 
   const values = {
     apiData,
@@ -75,6 +94,9 @@ function AppProvider({ children }) {
     setComparisonFilter,
     valueFilter,
     setValueFilter,
+    filterByNumericValue,
+    setSelectedFilters,
+    selectedFilters,
   };
 
   return (
