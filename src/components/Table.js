@@ -7,7 +7,7 @@ function Table() {
 
   return (
     <div>
-      <table>
+      <table className="table-primary">
         <thead>
           <tr>
             <th>

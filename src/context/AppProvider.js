@@ -16,6 +16,7 @@ function AppProvider({ children }) {
     fetchApi().then((data) => {
       setApiData(data);
       setOriginalData(data);
+      console.log(data);
     });
   }, []);
 
@@ -54,12 +55,14 @@ function AppProvider({ children }) {
         setApiData(originalData);
       }
     },
-    [columnFilter,
+    [
+      columnFilter,
       comparisonFilter,
       valueFilter,
       originalData,
       apiData,
-      comparisonToString],
+      comparisonToString,
+    ],
   );
 
   const values = {
