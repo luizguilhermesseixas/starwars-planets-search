@@ -101,13 +101,23 @@ describe('Desenvolva testes para atingir 30% de cobertura total da aplicação',
     const Coruscant = await screen.findByText(/coruscant/i)
     expect(Coruscant).toBeInTheDocument();
   });
-  /*   test('testa se os planetas são renderizados na tela', async () => {
-      mockFetchApi.mockResolvedValueOnce(mockData);
-      render(<App />);
-      const planetNames = await screen.findAllByText(/^[A-Z]/);
-      expect(planetNames).toHaveLength(10);
-    }); */
-
+  test('teste se ao aplicar o filtro population igual a 1000 o planeta Yavin IV é exibido', async () => {
+    mockFetchApi();
+    await act(async () => {
+      render(<App />)
+    })
+    const columnFilterInput = screen.getByTestId('column-filter');
+    expect(global.fetch).toHaveBeenCalled();
+    fireEvent.change(columnFilterInput, { target: { value: 'population' } });
+    const comparisonFilterInput = screen.getByTestId('comparison-filter');
+    fireEvent.change(comparisonFilterInput, { target: { value: 'igual a' } });
+    const valueFilterInput = screen.getByTestId('value-filter');
+    fireEvent.change(valueFilterInput, { target: { value: '1000' } });
+    const applyfilterBtn = screen.getByRole('button', { name: 'Aplicar filtro' });
+    fireEvent.click(applyfilterBtn);
+    const yavinIV = await screen.findByText(/Yavin IV/i)
+    expect(yavinIV).toBeInTheDocument();
+  });
 })
 
 

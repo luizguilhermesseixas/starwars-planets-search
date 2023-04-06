@@ -15,7 +15,7 @@ function Filters() {
     setSelectedFilters,
     selectedFilters,
     columnOptions,
-    setColumnOptions,
+    /*     setColumnOptions, */
   } = useContext(AppContext);
 
   /*   const columnOptions = [
@@ -50,30 +50,32 @@ function Filters() {
     );
   };
 
-  const removeColumnFilter = () => {
-    if (columnOptions.length > 0) {
-      const newColumnfilter = columnOptions
-        .filter((eachOption) => eachOption !== columnFilter);
-      setColumnOptions(newColumnfilter);
-      setColumnFilter(newColumnfilter[0]);
-    }
-    /*     if (columnOptions.length === 0) {
-      setComparisonFilter('');
-      setValueFilter(null);
-    } */
+  const removeSelectedFilter = (filter) => {
+    /* let originalOptions = columnOptions; */
+    const newFilter = selectedFilters.filter((eachFilter) => eachFilter.id !== filter.id);
+    /* originalOptions = [...columnOptions, filter.column]; */
+    filterByNumericValue(newFilter);
+    setSelectedFilters(newFilter);
+    /* setColumnOptions(originalOptions); */
   };
 
   const handleClick = () => {
-    filterByNumericValue();
-    setSelectedFilters([
-      ...selectedFilters,
-      {
-        columnFilter,
-        comparisonFilter,
-        valueFilter,
-      },
-    ]);
-    removeColumnFilter();
+    if (columnFilter !== undefined) {
+      const filters = [...selectedFilters,
+        {
+          id: selectedFilters.length + 1,
+          column: columnFilter,
+          comparison: comparisonFilter,
+          value: valueFilter,
+        }];
+      setSelectedFilters(filters);
+      filterByNumericValue(filters);
+    }
+  };
+
+  const removeAllFilters = () => {
+    setSelectedFilters([]);
+    filterByNumericValue([]);
   };
 
   return (
@@ -116,15 +118,33 @@ function Filters() {
       >
         Aplicar filtro
       </button>
-      { selectedFilters.map((eachFilter, i) => (
-        <span key={ i }>
-          {eachFilter.columnFilter}
+      { selectedFilters.length > 0 ? selectedFilters.map((eachFilter, i) => (
+        <div
+          key={ i }
+          data-testid="filter"
+        >
+
+          {eachFilter.column}
           {' '}
-          {eachFilter.comparisonFilter}
+          {eachFilter.comparison}
           {' '}
-          {valueFilter}
-        </span>
-      ))}
+          {eachFilter.value}
+
+          <button
+            type="button"
+            onClick={ () => removeSelectedFilter(eachFilter) }
+          >
+            excluir
+          </button>
+        </div>
+      )) : null }
+      <button
+        type="button"
+        onClick={ removeAllFilters }
+        data-testid="button-remove-filters"
+      >
+        Remover todas filtragens
+      </button>
     </header>
   );
 }
